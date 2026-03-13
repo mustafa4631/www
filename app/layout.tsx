@@ -35,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="tr" className="scroll-smooth">
-      <body className="noise-grain">
+      <body className="bg-bg-deep text-text antialiased selection:bg-primary/30">
         {/* Skip to content — accessibility */}
         <a href="#main-content" className="skip-link">
           İçeriğe Geç / Skip to Content
@@ -48,7 +48,7 @@ export default function RootLayout({
         <div className="fixed inset-0 -z-5 overflow-hidden pointer-events-none" aria-hidden="true">
           <div
             className="floating-blob w-[450px] h-[450px] left-[8%] top-[15%]"
-            style={{ background: "rgba(0, 229, 204, 0.08)" }}
+            style={{ background: "rgba(138, 43, 226, 0.08)" }}
           />
           <div
             className="floating-blob w-[350px] h-[350px] left-[65%] top-[55%]"
@@ -61,7 +61,7 @@ export default function RootLayout({
           <div
             className="floating-blob w-[300px] h-[300px] left-[80%] top-[10%]"
             style={{
-              background: "rgba(0, 229, 204, 0.05)",
+              background: "rgba(138, 43, 226, 0.05)",
               animationDelay: "-8s",
               animationDuration: "22s",
             }}

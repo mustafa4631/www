@@ -7,10 +7,10 @@ import { Heart, Code, GitPullRequest, MessageSquare, Terminal } from "lucide-rea
 export default function OpenSource() {
   return (
     <section id="open-source" className="section-spacing section-container">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
         
         {/* Left: Content */}
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-8">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-violet-dim border border-violet/20">
               <Code className="text-violet w-5 h-5" />
@@ -31,15 +31,15 @@ export default function OpenSource() {
             <span className="block mt-2 text-sm text-text-dim">(Topluluk tarafından, topluluk için geliştirildi.)</span>
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-             <div className="flex items-start gap-4 p-5 rounded-2xl bg-white/5 border border-white/5 hover:border-violet/30 transition-colors group">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
+             <div className="flex items-start gap-5 p-6 md:p-8 rounded-[24px] bg-white/5 border border-white/5 hover:border-violet/30 transition-colors group">
                 <GitPullRequest className="text-text-dim group-hover:text-violet transition-colors mt-1" size={20} />
                 <div>
                    <h4 className="font-bold text-white text-sm">Contribute</h4>
                    <p className="text-xs text-text-dim">Help us catch bugs or add new features on GitHub.</p>
                 </div>
              </div>
-             <div className="flex items-start gap-4 p-5 rounded-2xl bg-white/5 border border-white/5 hover:border-violet/30 transition-colors group">
+             <div className="flex items-start gap-5 p-6 md:p-8 rounded-[24px] bg-white/5 border border-white/5 hover:border-violet/30 transition-colors group">
                 <MessageSquare className="text-text-dim group-hover:text-violet transition-colors mt-1" size={20} />
                 <div>
                    <h4 className="font-bold text-white text-sm">Feedback</h4>
@@ -56,7 +56,7 @@ export default function OpenSource() {
           viewport={{ once: true }}
           className="relative"
         >
-          <div className="glass-strong rounded-3xl overflow-hidden border-white/10 shadow-2xl overflow-hidden">
+          <div className="glass-strong overflow-hidden">
             {/* Terminal Header */}
             <div className="bg-white/10 px-4 py-3 flex items-center justify-between">
               <div className="flex gap-1.5">

@@ -44,7 +44,7 @@ export default function Download() {
           <motion.div 
             animate={{ y: [0, -10, 0] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            className="w-20 h-20 rounded-3xl bg-primary flex items-center justify-center shadow-[0_0_40px_rgba(0,229,204,0.4)] mb-4"
+            className="w-20 h-20 rounded-3xl bg-primary flex items-center justify-center shadow-[0_0_40px_rgba(138,43,226,0.4)] mb-4"
           >
              <DownloadIcon size={40} className="text-bg-deep" />
           </motion.div>

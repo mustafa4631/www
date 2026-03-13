@@ -15,7 +15,7 @@ export default function Hero() {
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="flex flex-col gap-6"
+          className="flex flex-col gap-8 md:gap-10"
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-dim border border-primary/20 w-fit">
             <span className="relative flex h-2 w-2">

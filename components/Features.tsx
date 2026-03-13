@@ -61,7 +61,7 @@ const features = [
 export default function Features() {
   return (
     <section id="features" className="section-spacing section-container">
-      <div className="flex flex-col items-center text-center gap-4 mb-16">
+      <div className="flex flex-col items-center text-center gap-6 mb-24">
         <motion.span 
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -84,7 +84,7 @@ export default function Features() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
         {features.map((feature, index) => (
           <motion.div
             key={index}
@@ -92,7 +92,7 @@ export default function Features() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.1 }}
-            className="group glass p-8 rounded-[32px] border-white/5 card-lift relative overflow-hidden"
+            className="group glass p-10 rounded-[32px] border-white/5 card-lift relative overflow-hidden"
           >
             {/* Background Accent Glow */}
             <div 
