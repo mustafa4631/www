@@ -1,31 +1,38 @@
 import type { Metadata } from "next";
+import { Sora, DM_Sans } from "next/font/google";
 import "./globals.css";
 
+const sora = Sora({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+  weight: ["400", "500", "600"],
+});
+
 export const metadata: Metadata = {
-  title: "GK Healter — Linux System Health & Maintenance",
+  title: "GK Healter — Linux System Health & Security Tool",
   description:
-    "Free, open-source Linux system maintenance & health monitoring utility for Pardus and Debian-based distributions. Real-time health scoring, AI analysis, security scanning, and more.",
+    "Professional maintenance, health monitoring, and security auditing for Pardus and Debian-based Linux distributions. Open source, GPL-3.0.",
   keywords: [
-    "GK Healter",
     "Linux",
     "system maintenance",
+    "health monitoring",
+    "security audit",
     "Pardus",
     "Debian",
-    "health monitoring",
     "open source",
-    "security audit",
   ],
   authors: [
     { name: "Egehan KAHRAMAN" },
     { name: "Mustafa GÖKPINAR" },
   ],
-  openGraph: {
-    title: "GK Healter — Keep Your Computer Happy and Healthy 🌿",
-    description:
-      "Free, open-source Linux system maintenance utility for Pardus and Debian-based distributions.",
-    type: "website",
-    locale: "tr_TR",
-  },
 };
 
 export default function RootLayout({
@@ -34,50 +41,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr" className="scroll-smooth">
-      <body className="bg-bg-deep text-text antialiased selection:bg-primary/30">
-        {/* Skip to content — accessibility */}
-        <a href="#main-content" className="skip-link">
-          İçeriğe Geç / Skip to Content
-        </a>
-
-        {/* Living mesh background */}
-        <div className="living-mesh" aria-hidden="true" />
-
-        {/* Floating ambient blobs */}
-        <div className="fixed inset-0 -z-5 overflow-hidden pointer-events-none" aria-hidden="true">
-          <div
-            className="floating-blob w-[450px] h-[450px] left-[8%] top-[15%]"
-            style={{ background: "rgba(138, 43, 226, 0.08)" }}
-          />
-          <div
-            className="floating-blob w-[350px] h-[350px] left-[65%] top-[55%]"
-            style={{
-              background: "rgba(123, 94, 167, 0.06)",
-              animationDelay: "-4s",
-              animationDuration: "18s",
-            }}
-          />
-          <div
-            className="floating-blob w-[300px] h-[300px] left-[80%] top-[10%]"
-            style={{
-              background: "rgba(138, 43, 226, 0.05)",
-              animationDelay: "-8s",
-              animationDuration: "22s",
-            }}
-          />
-          <div
-            className="floating-blob w-[400px] h-[400px] left-[5%] top-[70%]"
-            style={{
-              background: "rgba(57, 255, 133, 0.04)",
-              animationDelay: "-12s",
-              animationDuration: "20s",
-            }}
-          />
-        </div>
-
-        {children}
-      </body>
+    <html lang="en" className={`${sora.variable} ${dmSans.variable}`}>
+      <body className="antialiased font-body">{children}</body>
     </html>
   );
 }
