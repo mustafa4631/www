@@ -1,85 +1,346 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { TECH_STACK } from "@/lib/constants";
 
-function ModuleDiagram() {
+/* ------------------------------------------------------------------ */
+/*  DATA                                                               */
+/* ------------------------------------------------------------------ */
+
+interface GraphNode {
+  id: string;
+  label: string;
+  sub?: string;
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  layer: 1 | 2 | 3 | 4;
+  accent?: boolean; // filled accent style
+  engine?: boolean; // core engine accent border
+}
+
+interface Edge {
+  from: string;
+  to: string;
+  dashed?: boolean;
+  label?: string;
+}
+
+const NODES: GraphNode[] = [
+  // Layer 1 — User Action
+  { id: "user", label: "User Action", sub: "Clean / Scan / Health Check / AI Analysis", x: 400, y: 50, w: 200, h: 56, layer: 1, accent: true },
+  // Layer 2 — UI & Auth
+  { id: "ui", label: "ui.py", sub: "Interface Controller", x: 280, y: 170, w: 180, h: 52, layer: 2 },
+  { id: "polkit", label: "Polkit Auth", sub: "pkexec", x: 520, y: 170, w: 160, h: 52, layer: 2 },
+  // Layer 3 — Engines
+  { id: "cleaner", label: "cleaner.py", sub: "Whitelist scan → safe delete", x: 120, y: 310, w: 175, h: 56, layer: 3, engine: true },
+  { id: "health", label: "health_engine.py", sub: "CPU / RAM / Disk → Score 0–100", x: 310, y: 310, w: 175, h: 56, layer: 3, engine: true },
+  { id: "security", label: "security_scanner.py", sub: "SUID · permissions · SSH", x: 500, y: 310, w: 175, h: 56, layer: 3, engine: true },
+  { id: "ai", label: "ai_engine.py", sub: "Local analysis → optional cloud", x: 690, y: 310, w: 175, h: 56, layer: 3, engine: true },
+  // Layer 4 — Supporting
+  { id: "pardus", label: "pardus_analyzer.py", sub: "Repo & service health", x: 160, y: 450, w: 180, h: 48, layer: 4 },
+  { id: "log", label: "log_analyzer.py", sub: "Journal error classification", x: 400, y: 450, w: 180, h: 48, layer: 4 },
+  { id: "report", label: "report_exporter.py", sub: "TXT / HTML / JSON output", x: 640, y: 450, w: 180, h: 48, layer: 4 },
+];
+
+const EDGES: Edge[] = [
+  // Layer 1 → 2
+  { from: "user", to: "ui" },
+  { from: "ui", to: "polkit", dashed: true, label: "if root needed" },
+  // Layer 2 → 3 (ui branches to all engines)
+  { from: "ui", to: "cleaner" },
+  { from: "ui", to: "health" },
+  { from: "ui", to: "security" },
+  { from: "ui", to: "ai" },
+  // Layer 3 → 4
+  { from: "cleaner", to: "pardus" },
+  { from: "health", to: "pardus" },
+  { from: "security", to: "log" },
+  { from: "health", to: "log" },
+  { from: "cleaner", to: "report" },
+  { from: "health", to: "report" },
+  { from: "security", to: "report" },
+  { from: "ai", to: "report" },
+];
+
+/* ------------------------------------------------------------------ */
+/*  HELPERS                                                            */
+/* ------------------------------------------------------------------ */
+
+function getNode(id: string) {
+  return NODES.find((n) => n.id === id)!;
+}
+
+function getEdgePath(e: Edge): { x1: number; y1: number; x2: number; y2: number } {
+  const f = getNode(e.from);
+  const t = getNode(e.to);
+  return {
+    x1: f.x,
+    y1: f.y + f.h / 2,
+    x2: t.x,
+    y2: t.y - t.h / 2,
+  };
+}
+
+function connectedEdges(nodeId: string) {
+  return EDGES.filter((e) => e.from === nodeId || e.to === nodeId);
+}
+
+function edgeKey(e: Edge) {
+  return `${e.from}-${e.to}`;
+}
+
+/* ------------------------------------------------------------------ */
+/*  ANIMATED EDGE                                                      */
+/* ------------------------------------------------------------------ */
+
+function AnimatedEdge({
+  edge,
+  highlighted,
+  baseDelay,
+}: {
+  edge: Edge;
+  highlighted: boolean;
+  baseDelay: number;
+}) {
+  const { x1, y1, x2, y2 } = getEdgePath(edge);
+
+  // Curved path
+  const midY = (y1 + y2) / 2;
+  const d = `M${x1},${y1} C${x1},${midY} ${x2},${midY} ${x2},${y2}`;
+
   return (
-    <svg
-      viewBox="0 0 800 420"
-      className="w-full h-auto"
-      aria-label="Architecture diagram showing GK Healter module relationships"
-    >
-      {/* Connection lines — drawn first so boxes sit on top */}
-      {/* ui.py → health_engine.py */}
-      <line x1="200" y1="140" x2="200" y2="210" stroke="var(--color-forest-300)" strokeWidth="1.5" strokeDasharray="4 3" />
-      {/* ui.py → cleaner.py */}
-      <line x1="350" y1="100" x2="430" y2="100" stroke="var(--color-forest-300)" strokeWidth="1.5" strokeDasharray="4 3" />
-      {/* ui.py → security_scanner.py */}
-      <line x1="350" y1="100" x2="530" y2="210" stroke="var(--color-forest-300)" strokeWidth="1.5" strokeDasharray="4 3" />
-      {/* ui.py → ai_engine.py */}
-      <line x1="270" y1="130" x2="400" y2="210" stroke="var(--color-forest-300)" strokeWidth="1.5" strokeDasharray="4 3" />
-      {/* cleaner.py → down */}
-      <line x1="530" y1="130" x2="530" y2="210" stroke="var(--color-forest-300)" strokeWidth="1.5" strokeDasharray="4 3" />
+    <g>
+      <motion.path
+        d={d}
+        fill="none"
+        stroke={highlighted ? "var(--color-forest-500)" : "var(--color-surface-300)"}
+        strokeWidth={highlighted ? 2 : 1.5}
+        strokeDasharray={edge.dashed ? "6 4" : "none"}
+        initial={{ pathLength: 0, opacity: 0 }}
+        whileInView={{ pathLength: 1, opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, delay: baseDelay, ease: "easeOut" }}
+        style={{ transition: "stroke 0.25s, stroke-width 0.25s" }}
+      />
 
-      {/* Supporting layer connections */}
-      <line x1="200" y1="280" x2="200" y2="330" stroke="var(--color-surface-300)" strokeWidth="1" strokeDasharray="3 3" />
-      <line x1="400" y1="280" x2="400" y2="330" stroke="var(--color-surface-300)" strokeWidth="1" strokeDasharray="3 3" />
-      <line x1="600" y1="280" x2="600" y2="330" stroke="var(--color-surface-300)" strokeWidth="1" strokeDasharray="3 3" />
-
-      {/* === Core Modules === */}
-      {/* ui.py */}
-      <rect x="150" y="60" width="200" height="80" rx="12" fill="var(--color-forest-50)" stroke="var(--color-forest-300)" strokeWidth="1.5" />
-      <text x="250" y="95" textAnchor="middle" fill="var(--color-forest-700)" fontSize="14" fontWeight="600" fontFamily="var(--font-display)">ui.py</text>
-      <text x="250" y="118" textAnchor="middle" fill="var(--color-forest-500)" fontSize="11" fontFamily="var(--font-body)">User Interface</text>
-
-      {/* health_engine.py */}
-      <rect x="100" y="210" width="200" height="70" rx="10" fill="var(--color-forest-50)" stroke="var(--color-forest-300)" strokeWidth="1.5" />
-      <text x="200" y="242" textAnchor="middle" fill="var(--color-forest-700)" fontSize="13" fontWeight="600" fontFamily="var(--font-display)">health_engine.py</text>
-      <text x="200" y="262" textAnchor="middle" fill="var(--color-forest-500)" fontSize="10" fontFamily="var(--font-body)">Health Monitor</text>
-
-      {/* cleaner.py */}
-      <rect x="430" y="60" width="200" height="80" rx="10" fill="var(--color-forest-50)" stroke="var(--color-forest-300)" strokeWidth="1.5" />
-      <text x="530" y="95" textAnchor="middle" fill="var(--color-forest-700)" fontSize="13" fontWeight="600" fontFamily="var(--font-display)">cleaner.py</text>
-      <text x="530" y="118" textAnchor="middle" fill="var(--color-forest-500)" fontSize="10" fontFamily="var(--font-body)">System Cleaner</text>
-
-      {/* security_scanner.py */}
-      <rect x="430" y="210" width="200" height="70" rx="10" fill="var(--color-forest-50)" stroke="var(--color-forest-300)" strokeWidth="1.5" />
-      <text x="530" y="242" textAnchor="middle" fill="var(--color-forest-700)" fontSize="13" fontWeight="600" fontFamily="var(--font-display)">security_scanner.py</text>
-      <text x="530" y="262" textAnchor="middle" fill="var(--color-forest-500)" fontSize="10" fontFamily="var(--font-body)">Security Audit</text>
-
-      {/* ai_engine.py */}
-      <rect x="300" y="210" width="200" height="70" rx="10" fill="var(--color-forest-50)" stroke="var(--color-forest-300)" strokeWidth="1.5" />
-      <text x="400" y="242" textAnchor="middle" fill="var(--color-forest-700)" fontSize="13" fontWeight="600" fontFamily="var(--font-display)">ai_engine.py</text>
-      <text x="400" y="262" textAnchor="middle" fill="var(--color-forest-500)" fontSize="10" fontFamily="var(--font-body)">AI Engine</text>
-
-      {/* === Supporting Modules (gray) === */}
-      {/* pardus_analyzer.py */}
-      <rect x="80" y="330" width="240" height="60" rx="8" fill="var(--color-surface-100)" stroke="var(--color-surface-300)" strokeWidth="1" />
-      <text x="200" y="358" textAnchor="middle" fill="var(--color-ink-400)" fontSize="12" fontWeight="500" fontFamily="var(--font-display)">pardus_analyzer.py</text>
-      <text x="200" y="376" textAnchor="middle" fill="var(--color-ink-300)" fontSize="10" fontFamily="var(--font-body)">Pardus Analysis</text>
-
-      {/* report_exporter.py */}
-      <rect x="340" y="330" width="200" height="60" rx="8" fill="var(--color-surface-100)" stroke="var(--color-surface-300)" strokeWidth="1" />
-      <text x="440" y="358" textAnchor="middle" fill="var(--color-ink-400)" fontSize="12" fontWeight="500" fontFamily="var(--font-display)">report_exporter.py</text>
-      <text x="440" y="376" textAnchor="middle" fill="var(--color-ink-300)" fontSize="10" fontFamily="var(--font-body)">Report Export</text>
-
-      {/* auto_maintenance_manager.py */}
-      <rect x="560" y="330" width="200" height="60" rx="8" fill="var(--color-surface-100)" stroke="var(--color-surface-300)" strokeWidth="1" />
-      <text x="660" y="358" textAnchor="middle" fill="var(--color-ink-400)" fontSize="12" fontWeight="500" fontFamily="var(--font-display)">auto_maintenance.py</text>
-      <text x="660" y="376" textAnchor="middle" fill="var(--color-ink-300)" fontSize="10" fontFamily="var(--font-body)">Scheduler</text>
-
-      {/* Layer labels */}
-      <text x="30" y="100" fill="var(--color-forest-600)" fontSize="10" fontWeight="600" fontFamily="var(--font-display)" textAnchor="start" transform="rotate(-90, 30, 100)">CORE</text>
-      <text x="30" y="360" fill="var(--color-ink-300)" fontSize="10" fontWeight="600" fontFamily="var(--font-display)" textAnchor="start" transform="rotate(-90, 30, 360)">SUPPORT</text>
-    </svg>
+      {/* Edge label */}
+      {edge.label && (
+        <motion.text
+          x={(x1 + x2) / 2 + 8}
+          y={midY - 4}
+          textAnchor="middle"
+          fill="var(--color-ink-300)"
+          fontSize="9"
+          fontFamily="var(--font-body)"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: baseDelay + 0.4, duration: 0.5 }}
+        >
+          {edge.label}
+        </motion.text>
+      )}
+    </g>
   );
 }
 
-export default function Architecture() {
+/* ------------------------------------------------------------------ */
+/*  PULSE DOT                                                          */
+/* ------------------------------------------------------------------ */
+
+function PulseDot({ edge, delay }: { edge: Edge; delay: number }) {
+  const { x1, y1, x2, y2 } = getEdgePath(edge);
+  const midY = (y1 + y2) / 2;
+  const d = `M${x1},${y1} C${x1},${midY} ${x2},${midY} ${x2},${y2}`;
+
   return (
-    <section id="architecture" className="py-28 lg:py-36">
+    <motion.circle
+      r="3"
+      fill="var(--color-forest-500)"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: [0, 1, 1, 0] }}
+      transition={{
+        duration: 2,
+        delay,
+        repeat: Infinity,
+        repeatDelay: 2,
+        ease: "easeInOut",
+      }}
+    >
+      <animateMotion
+        dur="2s"
+        begin={`${delay}s`}
+        repeatCount="indefinite"
+        path={d}
+      />
+    </motion.circle>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  GRAPH NODE                                                         */
+/* ------------------------------------------------------------------ */
+
+function GraphNodeBox({
+  node,
+  isHovered,
+  onHover,
+  onLeave,
+  baseDelay,
+}: {
+  node: GraphNode;
+  isHovered: boolean;
+  onHover: () => void;
+  onLeave: () => void;
+  baseDelay: number;
+}) {
+  const halfW = node.w / 2;
+  const halfH = node.h / 2;
+
+  return (
+    <motion.g
+      onMouseEnter={onHover}
+      onMouseLeave={onLeave}
+      style={{ cursor: "pointer" }}
+      initial={{ opacity: 0, scale: 0.85 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: baseDelay, ease: "easeOut" }}
+    >
+      {/* Shadow */}
+      <rect
+        x={node.x - halfW + 2}
+        y={node.y - halfH + 2}
+        width={node.w}
+        height={node.h}
+        rx={12}
+        fill="rgba(0,0,0,0.04)"
+      />
+
+      {/* Background */}
+      <motion.rect
+        x={node.x - halfW}
+        y={node.y - halfH}
+        width={node.w}
+        height={node.h}
+        rx={12}
+        fill={node.accent ? "var(--color-forest-600)" : "var(--color-surface-0)"}
+        stroke={
+          node.accent
+            ? "var(--color-forest-700)"
+            : node.engine
+            ? "var(--color-forest-300)"
+            : "var(--color-surface-300)"
+        }
+        strokeWidth={node.accent ? 0 : 1.5}
+        animate={{
+          scale: isHovered ? 1.04 : 1,
+        }}
+        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+        style={{ transformOrigin: `${node.x}px ${node.y}px` }}
+      />
+
+      {/* Engine left-accent bar */}
+      {node.engine && (
+        <rect
+          x={node.x - halfW}
+          y={node.y - halfH + 6}
+          width={3.5}
+          height={node.h - 12}
+          rx={2}
+          fill="var(--color-forest-500)"
+        />
+      )}
+
+      {/* Title */}
+      <text
+        x={node.x}
+        y={node.sub ? node.y - 4 : node.y + 4}
+        textAnchor="middle"
+        fill={node.accent ? "white" : "var(--color-ink-900)"}
+        fontSize={node.accent ? 13 : 12}
+        fontWeight="600"
+        fontFamily="var(--font-display)"
+      >
+        {node.label}
+      </text>
+
+      {/* Subtitle */}
+      {node.sub && (
+        <text
+          x={node.x}
+          y={node.y + 12}
+          textAnchor="middle"
+          fill={node.accent ? "rgba(255,255,255,0.8)" : "var(--color-ink-400)"}
+          fontSize="9.5"
+          fontFamily="var(--font-body)"
+        >
+          {node.sub}
+        </text>
+      )}
+
+      {/* Hover tooltip (shows on hover, larger description) */}
+      {isHovered && !node.accent && (
+        <motion.g
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <rect
+            x={node.x - 80}
+            y={node.y + halfH + 6}
+            width={160}
+            height={24}
+            rx={6}
+            fill="var(--color-ink-900)"
+          />
+          <text
+            x={node.x}
+            y={node.y + halfH + 22}
+            textAnchor="middle"
+            fill="white"
+            fontSize="9"
+            fontFamily="var(--font-body)"
+          >
+            {node.sub}
+          </text>
+        </motion.g>
+      )}
+    </motion.g>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  MAIN COMPONENT                                                     */
+/* ------------------------------------------------------------------ */
+
+export default function Architecture() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-80px" });
+  const [hoveredNode, setHoveredNode] = useState<string | null>(null);
+
+  const highlightedEdges = hoveredNode
+    ? new Set(connectedEdges(hoveredNode).map(edgeKey))
+    : new Set<string>();
+
+  // Stagger delays by layer
+  const layerDelay = useCallback((layer: number) => {
+    return 0.15 + (layer - 1) * 0.35;
+  }, []);
+
+  // Edge delay starts after layer 2 nodes are in
+  const edgeBaseDelay = 0.6;
+
+  // Pulse edges (subset for visual clarity)
+  const pulseEdges = [EDGES[0], EDGES[2], EDGES[4], EDGES[10]];
+
+  return (
+    <section id="architecture" ref={sectionRef} className="py-28 lg:py-36">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -88,23 +349,62 @@ export default function Architecture() {
           className="max-w-2xl"
         >
           <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-ink-900">
-            Built for Reliability
+            How It Works at Runtime
           </h2>
           <p className="mt-4 text-lg text-ink-400 leading-relaxed">
-            A modular architecture where each engine handles one responsibility.
-            Clean boundaries, predictable behavior.
+            A top-to-bottom flow from user action through authentication, core
+            engines, and supporting services. Every module has one job.
           </p>
         </motion.div>
 
-        {/* Module Diagram */}
+        {/* Interactive Node Graph */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="mt-16 rounded-2xl border border-surface-200 bg-surface-50 p-6 sm:p-10 overflow-x-auto"
+          className="mt-16 rounded-2xl border border-surface-200 bg-surface-50 p-4 sm:p-8 overflow-x-auto"
         >
-          <ModuleDiagram />
+          <svg
+            viewBox="0 0 860 520"
+            className="w-full h-auto"
+            style={{ minWidth: 640 }}
+            aria-label="Interactive architecture node graph"
+          >
+            {/* Layer labels */}
+            <text x="24" y="54" fill="var(--color-forest-600)" fontSize="9" fontWeight="700" fontFamily="var(--font-display)" letterSpacing="0.08em">USER</text>
+            <text x="24" y="174" fill="var(--color-ink-300)" fontSize="9" fontWeight="700" fontFamily="var(--font-display)" letterSpacing="0.08em">UI</text>
+            <text x="24" y="314" fill="var(--color-forest-600)" fontSize="9" fontWeight="700" fontFamily="var(--font-display)" letterSpacing="0.08em">CORE</text>
+            <text x="24" y="454" fill="var(--color-ink-300)" fontSize="9" fontWeight="700" fontFamily="var(--font-display)" letterSpacing="0.08em">SUPPORT</text>
+
+            {/* Edges (render behind nodes) */}
+            {EDGES.map((edge, i) => (
+              <AnimatedEdge
+                key={edgeKey(edge)}
+                edge={edge}
+                highlighted={highlightedEdges.has(edgeKey(edge))}
+                baseDelay={edgeBaseDelay + i * 0.06}
+              />
+            ))}
+
+            {/* Pulse dots */}
+            {isInView &&
+              pulseEdges.map((edge, i) => (
+                <PulseDot key={`pulse-${i}`} edge={edge} delay={3 + i * 1} />
+              ))}
+
+            {/* Nodes */}
+            {NODES.map((node) => (
+              <GraphNodeBox
+                key={node.id}
+                node={node}
+                isHovered={hoveredNode === node.id}
+                onHover={() => setHoveredNode(node.id)}
+                onLeave={() => setHoveredNode(null)}
+                baseDelay={layerDelay(node.layer)}
+              />
+            ))}
+          </svg>
         </motion.div>
 
         {/* Tech Stack Table */}

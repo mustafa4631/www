@@ -148,10 +148,10 @@ function HealthVisualization() {
         {/* Health score text */}
         <motion.text
           x="200"
-          y="195"
+          y="208"
           textAnchor="middle"
           fill="white"
-          fontSize="16"
+          fontSize="24"
           fontWeight="700"
           fontFamily="var(--font-display)"
           initial={{ opacity: 0 }}
@@ -159,21 +159,6 @@ function HealthVisualization() {
           transition={{ delay: 1.5, duration: 0.8 }}
         >
           98
-        </motion.text>
-        <motion.text
-          x="200"
-          y="212"
-          textAnchor="middle"
-          fill="white"
-          fontSize="7"
-          fontWeight="500"
-          opacity={0.8}
-          fontFamily="var(--font-body)"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.8 }}
-          transition={{ delay: 1.7, duration: 0.8 }}
-        >
-          HEALTH
         </motion.text>
       </svg>
     </div>
@@ -183,14 +168,65 @@ function HealthVisualization() {
 export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Floating background shapes */}
+      {/* Background Effects Layer */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-forest-50 blur-3xl opacity-60" />
-        <div className="absolute top-1/2 -left-60 w-[400px] h-[400px] rounded-full bg-forest-100 blur-3xl opacity-40" />
-        <div className="absolute bottom-20 right-1/4 w-[300px] h-[300px] rounded-full bg-surface-100 blur-3xl opacity-50" />
+        {/* 1. Mesh gradient base */}
+        <div 
+          className="absolute inset-0 opacity-60" 
+          style={{ 
+            background: 'radial-gradient(circle at 0% 0%, #f0faf4 0%, #ffffff 50%, #ffffff 100%)' 
+          }} 
+        />
+        
+        {/* 2. Subtle grid */}
+        <div 
+          className="absolute inset-0 opacity-[0.08]" 
+          style={{ 
+            backgroundImage: 'radial-gradient(#1a6b4a 1px, transparent 0px)', 
+            backgroundSize: '28px 28px' 
+          }} 
+        />
+
+        {/* 3. Floating orbs */}
+        <motion.div
+          animate={{ y: [0, -30, 0] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          style={{ willChange: "transform" }}
+          className="absolute top-[-100px] right-[-100px] w-[600px] h-[600px] rounded-full bg-[#1a6b4a] opacity-[0.04] blur-[80px]"
+        />
+        <motion.div
+          animate={{ y: [0, 20, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          style={{ willChange: "transform" }}
+          className="absolute bottom-[-50px] left-[-100px] w-[400px] h-[400px] rounded-full bg-[#1a6b4a] opacity-[0.03] blur-[80px]"
+        />
+        <motion.div
+          animate={{ scale: [1, 1.05, 1] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+          style={{ willChange: "transform" }}
+          className="absolute top-1/4 right-[10%] w-[500px] h-[500px] rounded-full bg-[#e8f5ee] opacity-[0.6] blur-[80px]"
+        />
+
+        {/* 4. Noise texture overlay */}
+        <div 
+          className="absolute inset-0 opacity-[0.03]" 
+          style={{ filter: 'url(#noise)' }} 
+        />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-8 pt-24 pb-16 w-full">
+      {/* Noise filter definition */}
+      <svg className="hidden">
+        <filter id="noise">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.65"
+            numOctaves="3"
+            stitchTiles="stitch"
+          />
+        </filter>
+      </svg>
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 pt-24 pb-16 w-full">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
           {/* Left — Copy */}
           <motion.div
