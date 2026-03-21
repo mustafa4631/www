@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Github } from "lucide-react";
 import { NAV_LINKS, GITHUB_URL } from "@/lib/constants";
+import TransitionLink from "./TransitionLink";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -19,12 +20,8 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
-  const handleLinkClick = (href: string) => {
+  const handleLinkClick = () => {
     setMobileOpen(false);
-    const el = document.querySelector(href);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
   };
 
   return (
@@ -54,22 +51,28 @@ export default function Navbar() {
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center gap-8">
-            {NAV_LINKS.map((link) => (
-              <button
-                key={link.href}
-                onClick={() => handleLinkClick(link.href)}
-                className="text-sm font-medium transition-colors duration-200 cursor-pointer"
-                style={{ color: "#8ab89a" }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.color = "#3dd68c")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.color = "#8ab89a")
-                }
-              >
-                {link.label}
-              </button>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const route = link.href.startsWith("#") ? `/${link.href.substring(1)}` : link.href;
+              return (
+                <TransitionLink
+                  key={link.href}
+                  href={route}
+                  className="text-sm font-medium transition-colors duration-200 cursor-pointer"
+                >
+                  <span
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.color = "#3dd68c")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.color = "#8ab89a")
+                    }
+                    style={{ transition: "color 0.2s", color: "#8ab89a" }}
+                  >
+                    {link.label}
+                  </span>
+                </TransitionLink>
+              );
+            })}
             <a
               href={GITHUB_URL}
               target="_blank"
@@ -126,22 +129,29 @@ export default function Navbar() {
             }}
           >
             <div className="px-6 py-6 space-y-4">
-              {NAV_LINKS.map((link) => (
-                <button
-                  key={link.href}
-                  onClick={() => handleLinkClick(link.href)}
-                  className="block w-full text-left text-base font-medium transition-colors cursor-pointer"
-                  style={{ color: "#8ab89a" }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.color = "#3dd68c")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.color = "#8ab89a")
-                  }
-                >
-                  {link.label}
-                </button>
-              ))}
+              {NAV_LINKS.map((link) => {
+                const route = link.href.startsWith("#") ? `/${link.href.substring(1)}` : link.href;
+                return (
+                  <TransitionLink
+                    key={link.href}
+                    href={route}
+                  >
+                    <div
+                      onClick={handleLinkClick}
+                      className="block w-full text-left text-base font-medium transition-colors cursor-pointer"
+                      style={{ color: "#8ab89a" }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.color = "#3dd68c")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.color = "#8ab89a")
+                      }
+                    >
+                      {link.label}
+                    </div>
+                  </TransitionLink>
+                );
+              })}
               <a
                 href={GITHUB_URL}
                 target="_blank"
