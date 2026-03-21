@@ -13,18 +13,23 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
+        <div className="section-divider" />
         <SectionTransition id="features">
           <Features />
         </SectionTransition>
+        <div className="section-divider" />
         <SectionTransition id="architecture">
           <Architecture />
         </SectionTransition>
+        <div className="section-divider" />
         <SectionTransition id="security">
           <Security />
         </SectionTransition>
+        <div className="section-divider" />
         <SectionTransition id="install">
           <Install />
         </SectionTransition>
+        <div className="section-divider" />
       </main>
       <Footer />
     </>
