@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
 import { SECURITY_PRINCIPLES } from "@/lib/constants";
+import AuroraBackground from "./AuroraBackground";
 
 const containerVariants = {
   hidden: {},
@@ -24,8 +25,28 @@ const itemVariants = {
 
 export default function Security() {
   return (
-    <section id="security" className="py-28 lg:py-36 bg-surface-50">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section
+      id="security"
+      className="relative py-28 lg:py-36 overflow-hidden"
+      style={{ background: "transparent", position: "relative", overflow: "hidden" }}
+    >
+      <AuroraBackground intensity={0.8} />
+      {/* Large aurora blob — top-right atmosphere */}
+      <div
+        className="absolute pointer-events-none"
+        aria-hidden="true"
+        style={{
+          top: 0,
+          right: 0,
+          width: "600px",
+          height: "600px",
+          borderRadius: "50%",
+          background:
+            "radial-gradient(circle, rgba(26, 107, 74, 0.10) 0%, transparent 70%)",
+          filter: "blur(80px)",
+        }}
+      />
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -33,10 +54,16 @@ export default function Security() {
           transition={{ duration: 0.6 }}
           className="max-w-2xl"
         >
-          <h2 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-ink-900">
+          <h2
+            className="font-display text-3xl sm:text-4xl font-bold tracking-tight"
+            style={{ color: "#e8f5ee" }}
+          >
             Security First, Always
           </h2>
-          <p className="mt-4 text-lg text-ink-400 leading-relaxed">
+          <p
+            className="mt-4 text-lg leading-relaxed"
+            style={{ color: "#8ab89a" }}
+          >
             Seven layers of protection ensure GK Healter never puts your system
             at risk.
           </p>
@@ -53,17 +80,41 @@ export default function Security() {
             <motion.div
               key={principle.title}
               variants={itemVariants}
-              className="flex gap-4 rounded-xl border border-surface-200 bg-surface-0 p-6 hover:border-forest-200 transition-colors duration-300"
+              className="flex gap-4 rounded-xl p-6 transition-all duration-300"
+              style={{
+                background: "rgba(13, 26, 20, 0.60)",
+                border: "1px solid rgba(26, 107, 74, 0.20)",
+                backdropFilter: "blur(16px)",
+                WebkitBackdropFilter: "blur(16px)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor =
+                  "rgba(26, 107, 74, 0.50)";
+                e.currentTarget.style.boxShadow =
+                  "0 0 20px rgba(26, 107, 74, 0.15)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor =
+                  "rgba(26, 107, 74, 0.20)";
+                e.currentTarget.style.boxShadow = "none";
+              }}
             >
               <CheckCircle
-                className="h-5 w-5 text-forest-600 mt-0.5 shrink-0"
+                className="h-5 w-5 mt-0.5 shrink-0"
                 strokeWidth={1.8}
+                style={{ color: "#3dd68c" }}
               />
               <div>
-                <h3 className="font-display text-base font-semibold text-ink-900">
+                <h3
+                  className="font-display text-base font-semibold"
+                  style={{ color: "#e8f5ee" }}
+                >
                   {principle.title}
                 </h3>
-                <p className="mt-1.5 text-sm text-ink-400 leading-relaxed">
+                <p
+                  className="mt-1.5 text-sm leading-relaxed"
+                  style={{ color: "#8ab89a" }}
+                >
                   {principle.description}
                 </p>
               </div>

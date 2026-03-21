@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Sora, DM_Sans } from "next/font/google";
 import "./globals.css";
+import { TransitionProvider } from "@/context/TransitionContext";
+import ScreenTransitionOverlay from "@/components/ScreenTransitionOverlay";
 
 const sora = Sora({
   subsets: ["latin"],
@@ -42,7 +44,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${sora.variable} ${dmSans.variable}`}>
-      <body className="antialiased font-body">{children}</body>
+      <body className="antialiased font-body">
+        <TransitionProvider>
+          <ScreenTransitionOverlay />
+          {children}
+        </TransitionProvider>
+      </body>
     </html>
   );
 }

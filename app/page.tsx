@@ -5,6 +5,7 @@ import Architecture from "@/components/Architecture";
 import Security from "@/components/Security";
 import Install from "@/components/Install";
 import Footer from "@/components/Footer";
+import SectionTransition from "@/components/SectionTransition";
 
 export default function Home() {
   return (
@@ -12,10 +13,18 @@ export default function Home() {
       <Navbar />
       <main>
         <Hero />
-        <Features />
-        <Architecture />
-        <Security />
-        <Install />
+        <SectionTransition id="features">
+          <Features />
+        </SectionTransition>
+        <SectionTransition id="architecture">
+          <Architecture />
+        </SectionTransition>
+        <SectionTransition id="security">
+          <Security />
+        </SectionTransition>
+        <SectionTransition id="install">
+          <Install />
+        </SectionTransition>
       </main>
       <Footer />
     </>
