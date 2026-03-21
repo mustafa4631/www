@@ -8,30 +8,38 @@ interface SectionTransitionProps {
   id?: string;
 }
 
-export default function SectionTransition({ children, id }: SectionTransitionProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+export default function SectionTransition({
+  children,
+  id,
+}: SectionTransitionProps) {
+  const ref = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start 90%", "start 10%"],
+    target: ref,
+    offset: ["start 95%", "start 20%"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [60, 0]);
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [0, 1]);
-  const scale = useTransform(scrollYProgress, [0, 1], [0.97, 1]);
+  const clipPath = useTransform(
+    scrollYProgress,
+    [0, 1],
+    ["inset(0% 0% 100% 0%)", "inset(0% 0% 0% 0%)"]
+  );
+
+  const opacity = useTransform(scrollYProgress, [0, 0.15], [0, 1]);
 
   return (
-    <div ref={containerRef} id={id}>
-      <motion.div
-        style={{
-          y,
-          opacity,
-          scale,
-          willChange: "transform, opacity",
-        }}
-      >
-        {children}
-      </motion.div>
-    </div>
+    <motion.div
+      ref={ref}
+      id={id}
+      style={{
+        clipPath,
+        opacity,
+        overflow: "hidden",
+        willChange: "clip-path",
+        position: "relative",
+      }}
+    >
+      {children}
+    </motion.div>
   );
 }
