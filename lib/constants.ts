@@ -29,6 +29,7 @@ export const NAV_LINKS: NavLink[] = [
   { label: "Architecture", href: "#architecture" },
   { label: "Security", href: "#security" },
   { label: "Install", href: "#install" },
+  { label: "Docs", href: "https://github.com/GK-Developers/GK-Healter" },
 ];
 
 export const GITHUB_URL = "https://github.com/GK-Developers/GK-Healter";
@@ -40,6 +41,7 @@ export const FEATURES: Feature[] = [
     description:
       "Deep-clean APT cache, old logs, browser caches, and coredumps. Reclaim disk space safely with whitelist-based deletion.",
   },
+
   {
     icon: "Activity",
     title: "Real-Time Health Score",
