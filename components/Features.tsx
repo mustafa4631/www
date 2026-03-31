@@ -46,7 +46,23 @@ const containerVariants = {
   },
 };
 
+import { useLocale } from "@/context/LocaleContext";
+
 export default function Features() {
+  const { t } = useLocale();
+
+  const getFeatureData = (title: string) => {
+    switch (title) {
+      case "System Cleaner": return { title: t("features.items.cleaner_title"), desc: t("features.items.cleaner_desc") };
+      case "Real-Time Health Score": return { title: t("features.items.health_title"), desc: t("features.items.health_desc") };
+      case "Security Auditor": return { title: t("features.items.security_title"), desc: t("features.items.security_desc") };
+      case "AI Engine": return { title: t("features.items.ai_title"), desc: t("features.items.ai_desc") };
+      case "Disk Analyzer": return { title: t("features.items.disk_title"), desc: t("features.items.disk_desc") };
+      case "Auto Maintenance": return { title: t("features.items.auto_title"), desc: t("features.items.auto_desc") };
+      default: return { title, desc: "" };
+    }
+  };
+
   return (
     <section
       id="features"
@@ -66,14 +82,13 @@ export default function Features() {
             className="font-display text-3xl sm:text-4xl font-bold tracking-tight"
             style={{ color: "#e8f5ee" }}
           >
-            Everything your system needs
+            {t("features.title")}
           </h2>
           <p
             className="mt-4 text-lg leading-relaxed"
             style={{ color: "#8ab89a" }}
           >
-            Six integrated modules working together to keep your Linux system
-            clean, fast, and secure.
+            {t("features.subtitle")}
           </p>
         </motion.div>
 
@@ -87,6 +102,7 @@ export default function Features() {
           {FEATURES.map((feature) => {
             const Icon = iconMap[feature.icon];
             const hoverAnim = iconAnimations[feature.icon] || {};
+            const { title, desc } = getFeatureData(feature.title);
             
             return (
               <motion.div
@@ -177,13 +193,13 @@ export default function Features() {
                   className="font-display text-lg font-semibold"
                   style={{ color: "#e8f5ee" }}
                 >
-                  {feature.title}
+                  {title}
                 </h3>
                 <p
                   className="mt-2 text-sm leading-relaxed"
                   style={{ color: "#8ab89a" }}
                 >
-                  {feature.description}
+                  {desc}
                 </p>
               </motion.div>
             );

@@ -6,8 +6,11 @@ import { ArrowDown, Github } from "lucide-react";
 import { GITHUB_URL } from "@/lib/constants";
 import HeroScene from "./HeroScene";
 
+import { useLocale } from "@/context/LocaleContext";
+
 export default function Hero() {
   const [viewportHeight, setViewportHeight] = useState(1);
+  const { t } = useLocale();
 
   useEffect(() => {
     setViewportHeight(window.innerHeight);
@@ -51,15 +54,15 @@ export default function Hero() {
                 className="h-1.5 w-1.5 rounded-full"
                 style={{ background: "#3dd68c" }}
               />
-              Open Source · GPL-3.0
+              {t("hero.badge")}
             </motion.div>
 
             <h1
               className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.08]"
               style={{ color: "#e8f5ee" }}
             >
-              Your Linux System,{" "}
-              <span style={{ color: "#3dd68c" }}>Always Healthy</span>
+              {t("hero.headline1")}{" "}
+              <span style={{ color: "#3dd68c" }}>{t("hero.headline2")}</span>
             </h1>
 
             <motion.p
@@ -69,8 +72,7 @@ export default function Hero() {
               className="mt-6 text-lg sm:text-xl leading-relaxed max-w-lg"
               style={{ color: "#8ab89a" }}
             >
-              Professional maintenance, health monitoring, and security auditing
-              for Pardus and Debian-based Linux distributions.
+              {t("hero.subheadline")}
             </motion.p>
 
             <motion.div
@@ -95,7 +97,7 @@ export default function Hero() {
                 }
               >
                 <ArrowDown className="h-4 w-4" />
-                Install Now
+                {t("hero.cta_primary")}
               </a>
               <a
                 href={GITHUB_URL}
@@ -117,7 +119,7 @@ export default function Hero() {
                 }}
               >
                 <Github className="h-4 w-4" />
-                View Source
+                {t("hero.cta_secondary")}
               </a>
             </motion.div>
           </motion.div>

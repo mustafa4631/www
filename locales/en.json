@@ -1,0 +1,82 @@
+{
+  "nav": {
+    "features": "Features",
+    "architecture": "Architecture",
+    "security": "Security",
+    "install": "Install",
+    "github": "GitHub"
+  },
+  "hero": {
+    "badge": "Open Source · GPL-3.0",
+    "headline1": "Your Linux System,",
+    "headline2": "Always Healthy",
+    "subheadline": "Professional maintenance, health monitoring, and security auditing for Pardus and Debian-based Linux distributions.",
+    "cta_primary": "Install Now",
+    "cta_secondary": "View Source"
+  },
+  "features": {
+    "title": "Everything your system needs",
+    "subtitle": "Six integrated modules working together to keep your Linux system clean, fast, and secure.",
+    "items": {
+      "cleaner_title": "System Cleaner",
+      "cleaner_desc": "Deep-clean APT cache, old logs, browser caches, and coredumps. Reclaim disk space safely with whitelist-based deletion.",
+      "health_title": "Real-Time Health Score",
+      "health_desc": "Monitor CPU, RAM, and disk usage with a composite 0–100 health score. Know your system’s condition at a glance.",
+      "security_title": "Security Auditor",
+      "security_desc": "Detect SUID binaries, world-writable files, and SSH misconfigurations. Harden your system with actionable insights.",
+      "ai_title": "AI Engine",
+      "ai_desc": "Hybrid intelligence: always-offline local analysis with optional cloud AI integration via Gemini, OpenAI, or Claude.",
+      "disk_title": "Disk Analyzer",
+      "disk_desc": "Discover large files and visualize space breakdown. Understand exactly where your storage is going.",
+      "auto_title": "Auto Maintenance",
+      "auto_desc": "Scheduled cleanup based on idle time, disk thresholds, and power state. Set it and forget it."
+    }
+  },
+  "architecture": {
+    "title": "Built for Reliability",
+    "subtitle": "A modular engine designed for performance, transparency, and deep system integration."
+  },
+  "security": {
+    "title": "Security by Design",
+    "subtitle": "We follow the principle of least privilege. Your system remains under your control, always.",
+    "items": {
+      "whitelist_title": "Whitelist-Based Deletion",
+      "whitelist_desc": "Only pre-defined safe directories can be cleaned. Nothing outside the whitelist is ever touched.",
+      "polkit_title": "Polkit Integration",
+      "polkit_desc": "System-level operations require explicit user authentication via pkexec before execution.",
+      "norf_title": "No rm -rf, Ever",
+      "norf_desc": "Recursive force deletion is never used under any condition. Every file removal is deliberate.",
+      "root_title": "Root Path Protection",
+      "root_desc": "Critical directories like /, /home, and /etc are hardcoded as untouchable. No exceptions.",
+      "audit_title": "Full Audit Trail",
+      "audit_desc": "Every deletion is logged with timestamp and result. Complete transparency on all operations.",
+      "suid_title": "SUID Whitelist",
+      "suid_desc": "Known safe SUID files are filtered via KNOWN_SUID_PATHS. Only unexpected ones are flagged.",
+      "ssh_title": "SSH Hardening",
+      "ssh_desc": "PermitRootLogin, PasswordAuthentication, and more are verified against security best practices."
+    }
+  },
+  "install": {
+    "title": "Ready to get started?",
+    "subtitle": "GK Healter is available for major distributions. Choose your preferred installation method below.",
+    "copy": "Copy",
+    "copied": "Copied!"
+  },
+  "footer": {
+    "tagline": "Professional system maintenance and security auditing for Linux.",
+    "links": {
+      "github": "GitHub",
+      "issues": "Issues",
+      "license": "License"
+    },
+    "built_by": "Built by ",
+    "and": " & ",
+    "copyright": "© 2025 GK Developers. Licensed under GPL-3.0."
+  },
+  "terminal": {
+    "title": "Live Terminal Demo",
+    "subtitle": "Experience the power of GK Healter directly in your browser. Select a command to see it in action.",
+    "run_button": "Run Command",
+    "reset_button": "Reset"
+  }
+}

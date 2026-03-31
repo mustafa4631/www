@@ -6,6 +6,7 @@ import Security from "@/components/Security";
 import Install from "@/components/Install";
 import Footer from "@/components/Footer";
 import SectionTransition from "@/components/SectionTransition";
+import TerminalDemo from "@/components/TerminalDemo";
 
 export default function Home() {
   return (
@@ -28,6 +29,10 @@ export default function Home() {
         <div className="section-divider" />
         <SectionTransition id="install">
           <Install />
+        </SectionTransition>
+        <div className="section-divider" />
+        <SectionTransition id="terminal">
+          <TerminalDemo />
         </SectionTransition>
         <div className="section-divider" />
       </main>

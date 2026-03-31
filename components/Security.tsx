@@ -23,7 +23,24 @@ const itemVariants = {
   },
 };
 
+import { useLocale } from "@/context/LocaleContext";
+
 export default function Security() {
+  const { t } = useLocale();
+
+  const getPrincipleData = (title: string) => {
+    switch (title) {
+      case "Whitelist-Based Deletion": return { title: t("security.items.whitelist_title"), desc: t("security.items.whitelist_desc") };
+      case "Polkit Integration": return { title: t("security.items.polkit_title"), desc: t("security.items.polkit_desc") };
+      case "No rm -rf, Ever": return { title: t("security.items.norf_title"), desc: t("security.items.norf_desc") };
+      case "Root Path Protection": return { title: t("security.items.root_title"), desc: t("security.items.root_desc") };
+      case "Full Audit Trail": return { title: t("security.items.audit_title"), desc: t("security.items.audit_desc") };
+      case "SUID Whitelist": return { title: t("security.items.suid_title"), desc: t("security.items.suid_desc") };
+      case "SSH Hardening": return { title: t("security.items.ssh_title"), desc: t("security.items.ssh_desc") };
+      default: return { title, desc: "" };
+    }
+  };
+
   return (
     <section
       id="security"
@@ -58,14 +75,13 @@ export default function Security() {
             className="font-display text-3xl sm:text-4xl font-bold tracking-tight"
             style={{ color: "#e8f5ee" }}
           >
-            Security First, Always
+            {t("security.title")}
           </h2>
           <p
             className="mt-4 text-lg leading-relaxed"
             style={{ color: "#8ab89a" }}
           >
-            Seven layers of protection ensure GK Healter never puts your system
-            at risk.
+            {t("security.subtitle")}
           </p>
         </motion.div>
 
@@ -76,50 +92,53 @@ export default function Security() {
           viewport={{ once: true, margin: "-60px" }}
           className="mt-16 grid gap-6 sm:grid-cols-2"
         >
-          {SECURITY_PRINCIPLES.map((principle) => (
-            <motion.div
-              key={principle.title}
-              variants={itemVariants}
-              className="flex gap-4 rounded-xl p-6 transition-all duration-300"
-              style={{
-                background: "rgba(13, 26, 20, 0.60)",
-                border: "1px solid rgba(26, 107, 74, 0.20)",
-                backdropFilter: "blur(16px)",
-                WebkitBackdropFilter: "blur(16px)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor =
-                  "rgba(26, 107, 74, 0.50)";
-                e.currentTarget.style.boxShadow =
-                  "0 0 20px rgba(26, 107, 74, 0.15)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor =
-                  "rgba(26, 107, 74, 0.20)";
-                e.currentTarget.style.boxShadow = "none";
-              }}
-            >
-              <CheckCircle
-                className="h-5 w-5 mt-0.5 shrink-0"
-                strokeWidth={1.8}
-                style={{ color: "#3dd68c" }}
-              />
-              <div>
-                <h3
-                  className="font-display text-base font-semibold"
-                  style={{ color: "#e8f5ee" }}
-                >
-                  {principle.title}
-                </h3>
-                <p
-                  className="mt-1.5 text-sm leading-relaxed"
-                  style={{ color: "#8ab89a" }}
-                >
-                  {principle.description}
-                </p>
-              </div>
-            </motion.div>
-          ))}
+          {SECURITY_PRINCIPLES.map((principle) => {
+            const { title, desc } = getPrincipleData(principle.title);
+            return (
+              <motion.div
+                key={principle.title}
+                variants={itemVariants}
+                className="flex gap-4 rounded-xl p-6 transition-all duration-300"
+                style={{
+                  background: "rgba(13, 26, 20, 0.60)",
+                  border: "1px solid rgba(26, 107, 74, 0.20)",
+                  backdropFilter: "blur(16px)",
+                  WebkitBackdropFilter: "blur(16px)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor =
+                    "rgba(26, 107, 74, 0.50)";
+                  e.currentTarget.style.boxShadow =
+                    "0 0 20px rgba(26, 107, 74, 0.15)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor =
+                    "rgba(26, 107, 74, 0.20)";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
+              >
+                <CheckCircle
+                  className="h-5 w-5 mt-0.5 shrink-0"
+                  strokeWidth={1.8}
+                  style={{ color: "#3dd68c" }}
+                />
+                <div>
+                  <h3
+                    className="font-display text-base font-semibold"
+                    style={{ color: "#e8f5ee" }}
+                  >
+                    {title}
+                  </h3>
+                  <p
+                    className="mt-1.5 text-sm leading-relaxed"
+                    style={{ color: "#8ab89a" }}
+                  >
+                    {desc}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
         </motion.div>
       </div>
     </section>

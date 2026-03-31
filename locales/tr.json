@@ -1,0 +1,82 @@
+{
+  "nav": {
+    "features": "Özellikler",
+    "architecture": "Mimari",
+    "security": "Güvenlik",
+    "install": "Yükle",
+    "github": "GitHub"
+  },
+  "hero": {
+    "badge": "Açık Kaynak · GPL-3.0",
+    "headline1": "Linux Sisteminiz,",
+    "headline2": "Daima Sağlıklı",
+    "subheadline": "Pardus ve Debian tabanlı Linux dağıtımları için profesyonel bakım, sağlık izleme ve güvenlik denetimi.",
+    "cta_primary": "Hemen Yükle",
+    "cta_secondary": "Kaynağı İncele"
+  },
+  "features": {
+    "title": "Sisteminizin tüm ihtiyaçları",
+    "subtitle": "Linux sisteminizi temiz, hızlı ve güvenli tutmak için birlikte çalışan altı entegre modül.",
+    "items": {
+      "cleaner_title": "Sistem Temizleyici",
+      "cleaner_desc": "APT önbelleği, eski günlükler, tarayıcı önbellekleri ve coredump dosyalarını derinlemesine temizleyin. Beyaz liste tabanlı silme ile güvenli bir şekilde disk alanı kazanın.",
+      "health_title": "Gerçek Zamanlı Sağlık Skoru",
+      "health_desc": "CPU, RAM ve disk kullanımını 0–100 arası bir sağlık skoruyla izleyin. Sisteminizin durumunu bir bakışta öğrenin.",
+      "security_title": "Güvenlik Denetçisi",
+      "security_desc": "SUID ikili dosyalarını, herkes tarafından yazılabilir dosyaları ve SSH hatalı yapılandırmalarını tespit edin. Uygulanabilir bilgilerle sisteminizi güçlendirin.",
+      "ai_title": "Yapay Zeka Motoru",
+      "ai_desc": "Hibrit zeka: Gemini, OpenAI veya Claude aracılığıyla isteğe bağlı bulut AI entegrasyonu ile çevrimdışı yerel analiz.",
+      "disk_title": "Disk Analizörü",
+      "disk_desc": "Büyük dosyaları keşfedin ve alan dağılımını görselleştirin. Depolama alanınızın tam olarak nereye gittiğini anlayın.",
+      "auto_title": "Otomatik Bakım",
+      "auto_desc": "Boşta kalma süresi, disk eşikleri ve güç durumuna göre planlanmış temizlik. Kurun ve unutun."
+    }
+  },
+  "architecture": {
+    "title": "Güvenilirlik İçin Tasarlandı",
+    "subtitle": "Performans, şeffaflık ve derin sistem entegrasyonu için tasarlanmış modüler bir motor."
+  },
+  "security": {
+    "title": "Tasarım Gereği Güvenlik",
+    "subtitle": "En az ayrıcalık ilkesini takip ediyoruz. Sisteminiz her zaman sizin kontrolünüzde kalır.",
+    "items": {
+      "whitelist_title": "Beyaz Liste Tabanlı Silme",
+      "whitelist_desc": "Yalnızca önceden tanımlanmış güvenli dizinler temizlenebilir. Beyaz liste dışındaki hiçbir şeye dokunulmaz.",
+      "polkit_title": "Polkit Entegrasyonu",
+      "polkit_desc": "Sistem düzeyindeki işlemler, yürütmeden önce pkexec aracılığıyla açık kullanıcı kimlik doğrulaması gerektirir.",
+      "norf_title": "Asla rm -rf Kullanılmaz",
+      "norf_desc": "Rekürsif zorla silme hiçbir koşulda kullanılmaz. Her dosya kaldırma işlemi kasıtlıdır.",
+      "root_title": "Kök Dizin Koruması",
+      "root_desc": "\"/\", \"/home\" ve \"/etc\" gibi kritik dizinler dokunulmaz olarak kodlanmıştır. İstisna yoktur.",
+      "audit_title": "Tam Denetim İzi",
+      "audit_desc": "Her silme işlemi zaman damgası ve sonuçla birlikte kaydedilir. Tüm operasyonlarda tam şeffaflık.",
+      "suid_title": "SUID Beyaz Listesi",
+      "suid_desc": "Bilinen güvenli SUID dosyaları KNOWN_SUID_PATHS aracılığıyla filtrelenir. Yalnızca beklenmedik olanlar işaretlenir.",
+      "ssh_title": "SSH Güçlendirme",
+      "ssh_desc": "PermitRootLogin, PasswordAuthentication ve daha fazlası güvenlik en iyi uygulamalarına göre doğrulanır."
+    }
+  },
+  "install": {
+    "title": "Başlamaya hazır mısınız?",
+    "subtitle": "GK Healter başlıca dağıtımlar için mevcuttur. Aşağıdan tercih ettiğiniz kurulum yöntemini seçin.",
+    "copy": "Kopyala",
+    "copied": "Kopyalandı!"
+  },
+  "footer": {
+    "tagline": "Linux için profesyonel sistem bakımı ve güvenlik denetimi.",
+    "links": {
+      "github": "GitHub",
+      "issues": "Sorunlar",
+      "license": "Lisans"
+    },
+    "built_by": "Geliştirenler: ",
+    "and": " & ",
+    "copyright": "© 2025 GK Developers. GPL-3.0 lisansı altındadır."
+  },
+  "terminal": {
+    "title": "Canlı Terminal Demosu",
+    "subtitle": "GK Healter'ın gücünü doğrudan tarayıcınızda deneyimleyin. Bir komut seçerek çalışmasını izleyin.",
+    "run_button": "Komutu Çalıştır",
+    "reset_button": "Sıfırla"
+  }
+}

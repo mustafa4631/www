@@ -5,9 +5,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Github } from "lucide-react";
 import { NAV_LINKS, GITHUB_URL } from "@/lib/constants";
 import TransitionLink from "./TransitionLink";
+import { useLocale } from "@/context/LocaleContext";
+import LanguageToggle from "./LanguageToggle";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { t } = useLocale();
 
   useEffect(() => {
     if (mobileOpen) {
@@ -22,6 +25,11 @@ export default function Navbar() {
 
   const handleLinkClick = () => {
     setMobileOpen(false);
+  };
+
+  const getNavLinkLabel = (label: string) => {
+    const key = `nav.${label.toLowerCase()}`;
+    return t(key);
   };
 
   return (
@@ -68,11 +76,12 @@ export default function Navbar() {
                     }
                     style={{ transition: "color 0.2s", color: "#8ab89a" }}
                   >
-                    {link.label}
+                    {getNavLinkLabel(link.label)}
                   </span>
                 </TransitionLink>
               );
             })}
+            <LanguageToggle />
             <a
               href={GITHUB_URL}
               target="_blank"
@@ -92,7 +101,7 @@ export default function Navbar() {
               }}
             >
               <Github className="h-4 w-4" />
-              View on GitHub
+              {t("nav.github")}
             </a>
           </div>
 
@@ -147,11 +156,14 @@ export default function Navbar() {
                         (e.currentTarget.style.color = "#8ab89a")
                       }
                     >
-                      {link.label}
+                      {getNavLinkLabel(link.label)}
                     </div>
                   </TransitionLink>
                 );
               })}
+              <div className="pt-2">
+                <LanguageToggle />
+              </div>
               <a
                 href={GITHUB_URL}
                 target="_blank"
@@ -163,7 +175,7 @@ export default function Navbar() {
                 }}
               >
                 <Github className="h-4 w-4" />
-                View on GitHub
+                {t("nav.github")}
               </a>
             </div>
           </motion.div>
